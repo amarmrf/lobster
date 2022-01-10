@@ -84,21 +84,21 @@
 import { ref } from "vue";
 import { uid } from "uid";
 import { supabase } from "../supabase/init";
+import { useRouter } from "vue-router";
 
 export default {
   name: "create-past",
   setup() {
     // Create data
     const epochTitle = ref("");
-    const experiences = ref([1]);
+    const experiences = ref([]);
     const statusMsg = ref(null);
     const errorMsg = ref(null);
-  
-  
+    const router = useRouter();
 
     // Add epoch
     const addExperience = () => {
-      if (experiences.value.length < 7) {
+      if (experiences.value.length < 6) {
         experiences.value.push({
           id: uid(),
           title: "",
@@ -128,15 +128,18 @@ export default {
     // Create experience
     const createEpoch = async () => {
       try {
-        const { error } = await supabase.from("past_experiences").insert([
+        const { error } = await supabase.from("past_epochs").insert([
           {
+            title: epochTitle.value,
+            sequence_number: experiences.value.length,
             experiences: experiences.value,
           },
         ]);
         if (error) throw error;
         statusMsg.value = "Succes: Exercise Created!";
         epochTitle.value = null;
-        experiences.value = [{title: ''}];
+        experiences.value = [];
+        router.push({ name: "Home" });
         setTimeout(() => {
           statusMsg.value = false;
         }, 5000);

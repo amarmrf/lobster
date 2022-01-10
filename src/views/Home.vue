@@ -26,7 +26,7 @@
       >
         <!-- Cardio Img -->
         <img
-          v-if="epoch.epochType === 'cardio'"
+          v-if="epoch.sequence_number % 2"
           src="@/assets/images/running-light-green.png"
           class="h-24 w-auto"
           alt=""
@@ -43,7 +43,7 @@
         <p
           class="mt-6 py-1 px-3 text-xs text-white bg-at-light-green shadow-md rounded-lg"
         >
-          {{ `${epoch.sequence_number}${epoch.sequence_number === 1 ? 'st' : epoch.sequence_number === 2 ? 'nd' : epoch.sequence_number === 3 ? 'rd' : 'th'} Epoch` }}
+          {{ `${epoch.sequence_number || 0 }${epoch.sequence_number === 1 ? 'st' : epoch.sequence_number === 2 ? 'nd' : epoch.sequence_number === 3 ? 'rd' : 'th'} Epoch` }}
         </p>
 
         <h1 class="mt-8 mb-2 text-center text-xl text-at-light-green">
