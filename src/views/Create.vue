@@ -15,7 +15,7 @@
     <div class="p-8 flex items-start bg-light-grey rounded-md shadow-lg">
       <!-- Form -->
       <form @submit.prevent="createExercise" class="flex flex-col gap-y-5 w-full">
-        <h1 class="text-2xl text-at-light-green">Past Authoring</h1>
+        <h1 class="text-2xl text-at-light-green"> Epochs Creation </h1>
 
         <div class="flex flex-col gap-y-4">
           <div
@@ -61,7 +61,7 @@
       border-2 border-transparent hover:border-at-light-green hover:bg-white
       hover:text-at-light-green"
         >
-          Save
+         {{'Save & Continue'}}
         </button>
       </form>
     </div>
@@ -71,6 +71,7 @@
 <script>
 import { ref } from "vue";
 import { uid } from "uid";
+import { useRouter } from "vue-router"
 import { supabase } from "../supabase/init";
 export default {
   name: "create-past",
@@ -82,12 +83,19 @@ export default {
     const statusMsg = ref(null);
     const errorMsg = ref(null);
     const dataLoaded = ref(null);
+    const user = supabase.auth.user()
+    const router = useRouter()
+
+    if (!user) {
+      router.push({ name: 'Login' })
+    }
 
     // Get data
     const getData = async () => {
       try {
         const { data: items, error } = await supabase.from("past_epochs").select("*");
         if (error) throw error;
+        console.log(items)
         epochs.value = items;
         dataLoaded.value = true;
       } catch (error) {
@@ -97,6 +105,8 @@ export default {
 
     // Run data function
     getData(); 
+
+    // add sort epochs by sequence_number
     
 
     // Add epoch
