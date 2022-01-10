@@ -103,7 +103,6 @@ export default {
         experiences.value.push({
           id: uid(),
           title: "",
-          sequence_number: experiences.value.length
         });
       }
     };
