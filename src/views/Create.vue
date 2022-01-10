@@ -71,8 +71,8 @@
 <script>
 import { ref } from "vue";
 import { uid } from "uid";
-import { useRouter } from "vue-router"
 import { supabase } from "../supabase/init";
+
 export default {
   name: "create-past",
   setup() {
@@ -83,13 +83,7 @@ export default {
     const statusMsg = ref(null);
     const errorMsg = ref(null);
     const dataLoaded = ref(null);
-    const user = supabase.auth.user()
-    const router = useRouter()
-
-    if (!user) {
-      router.push({ name: 'Login' })
-    }
-
+  
     // Get data
     const getData = async () => {
       try {

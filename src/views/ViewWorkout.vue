@@ -259,6 +259,7 @@ import { supabase } from "../supabase/init";
 import { useRoute, useRouter } from "vue-router";
 import store from "../store/index";
 import { uid } from "uid";
+
 export default {
   name: "view-workout",
   setup() {

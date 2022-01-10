@@ -13,7 +13,7 @@ const routes = [
     component: Home,
     meta: {
       title: "Home",
-      auth: false,
+      auth: true,
     },
   },
   {
@@ -49,7 +49,7 @@ const routes = [
     component: ViewWorkout,
     meta: {
       title: "View Workout",
-      auth: false,
+      auth: true,
     },
   },
 ];
@@ -61,7 +61,7 @@ const router = createRouter({
 
 // Change document titles
 router.beforeEach((to, from, next) => {
-  document.title = `${to.meta.title} | Active Tracker`;
+  document.title = `${to.meta.title} | Mythologize`;
   next();
 });
 

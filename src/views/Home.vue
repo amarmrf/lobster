@@ -43,7 +43,7 @@
         <p
           class="mt-6 py-1 px-3 text-xs text-white bg-at-light-green shadow-md rounded-lg"
         >
-          {{ `Experience ${epoch.sequence_number}` }}
+          {{ `${epoch.sequence_number}${epoch.sequence_number === 1 ? 'st' : epoch.sequence_number === 2 ? 'nd' : epoch.sequence_number === 3 ? 'rd' : 'th'} Epoch` }}
         </p>
 
         <h1 class="mt-8 mb-2 text-center text-xl text-at-light-green">
@@ -57,7 +57,6 @@
 <script>
 import { ref } from "vue";
 import { supabase } from "../supabase/init";
-import { useRouter } from "vue-router"
 
 export default {
   name: "home-view",
@@ -66,14 +65,7 @@ export default {
     // Create data / vars
     const data = ref([]);
     const dataLoaded = ref(null);
-    const user = supabase.auth.user()
-    const router = useRouter()
-
-
-    if (!user) {
-      router.push({ name: 'Login' })
-    }
-
+   
     // Get data
     const getData = async () => {
       try {

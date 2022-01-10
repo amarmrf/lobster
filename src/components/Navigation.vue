@@ -4,7 +4,7 @@
       <div class="flex item-center gap-x-4">
         <img src="../assets/images/dumbbell-light.png" class="w-14">
         <h1 class="text-lg mt-1">
-          The Lobster
+          Mythologize Your Life And Become The Main Character
         </h1>
       </div>
       <ul class="flex flex-1 justify-end gap-x-10">
