@@ -15,17 +15,29 @@
     <div class="p-8 flex items-start bg-light-grey rounded-md shadow-lg">
       <!-- Form -->
       <form @submit.prevent="createExercise" class="flex flex-col gap-y-5 w-full">
-        <h1 class="text-2xl text-at-light-green"> Epochs Creation </h1>
+        <h1 class="text-2xl text-at-light-green"> New Epoch Creation </h1>
+         <div class="flex flex-col">
+          <label for="workout-name" class="mb-1 text-sm text-at-light-green"
+            >Epoch Name</label
+          >
+          <input
+            type="text"
+            required
+            class="p-2 text-gray-500 focus:outline-none"
+            id="workout-name"
+            v-model="epochName"
+          />
+        </div>
 
         <div class="flex flex-col gap-y-4">
           <div
             class="flex flex-col gap-x-6 gap-y-2 relative"
-            v-for="(item, index) in epochs"
+            v-for="(item, index) in experiences"
             :key="index"
           >
             <div class="flex flex-col ">
               <label for="epoch-name" class="mb-1 text-sm text-at-light-green"
-                >Epoch {{ index + 1 }} Title
+                >Experience {{ index + 1 }} Title
               </label>
               <input
                 required
@@ -49,7 +61,7 @@
             border-2 border-transparent hover:border-at-light-green hover:bg-white
             hover:text-at-light-green"
           >
-            Add Epoch
+            Add Experience
           </button>
         </div>
 
@@ -61,7 +73,7 @@
       border-2 border-transparent hover:border-at-light-green hover:bg-white
       hover:text-at-light-green"
         >
-         {{'Save & Continue'}}
+         {{'Create Epoch'}}
         </button>
       </form>
     </div>
@@ -77,47 +89,29 @@ export default {
   name: "create-past",
   setup() {
     // Create data
-    const exerciseName = ref("");
-    const exerciseType = ref("select-exercise");
-    const epochs = ref([]);
+    const experienceName = ref("");
+    const experienceType = ref("select-experience");
+    const experiences = ref([1]);
     const statusMsg = ref(null);
     const errorMsg = ref(null);
-    const dataLoaded = ref(null);
   
-    // Get data
-    const getData = async () => {
-      try {
-        const { data: items, error } = await supabase.from("past_epochs").select("*");
-        if (error) throw error;
-        console.log(items)
-        epochs.value = items;
-        dataLoaded.value = true;
-      } catch (error) {
-        console.warn(error.message);
-      }
-    };
-
-    // Run data function
-    getData(); 
-
-    // add sort epochs by sequence_number
-    
+  
 
     // Add epoch
     const addEpoch = () => {
-      if (epochs.value.length < 7) {
-        epochs.value.push({
+      if (experiences.value.length < 7) {
+        experiences.value.push({
           id: uid(),
           title: "",
-          sequence_number: epochs.value.length
+          sequence_number: experiences.value.length
         });
       }
     };
 
     // Delete epoch
     const deleteEpoch = (id) => {
-      if (epochs.value.length > 1) {
-        epochs.value = epochs.value.filter((epoch) => epoch.id !== id);
+      if (experiences.value.length > 1) {
+        experiences.value = experiences.value.filter((epoch) => epoch.id !== id);
         return;
       }
       errorMsg.value = "Error: Cannot remove, need to at least have one epoch";
@@ -126,25 +120,25 @@ export default {
       }, 5000);
     };
 
-    // Listens for chaging of exercise type input
-    const exerciseChange = () => {
-      epochs.value = [];
+    // Listens for chaging of experience type input
+    const experienceChange = () => {
+      experiences.value = [];
       addEpoch();
     };
 
-    // Create exercise
+    // Create experience
     const createExercise = async () => {
       try {
-        const { error } = await supabase.from("past_epochs").insert([
+        const { error } = await supabase.from("past_experiences").insert([
           {
-            epochs: epochs.value,
+            experiences: experiences.value,
           },
         ]);
         if (error) throw error;
         statusMsg.value = "Succes: Exercise Created!";
-        exerciseName.value = null;
-        exerciseType.value = "select-exercise";
-        epochs.value = [];
+        experienceName.value = null;
+        experienceType.value = "select-experience";
+        experiences.value = [];
         setTimeout(() => {
           statusMsg.value = false;
         }, 5000);
@@ -157,13 +151,13 @@ export default {
     };
 
     return {
-      exerciseName,
-      exerciseType,
-      epochs,
+      experienceName,
+      experienceType,
+      experiences,
       statusMsg,
       errorMsg,
       addEpoch,
-      exerciseChange,
+      experienceChange,
       deleteEpoch,
       createExercise,
     };
