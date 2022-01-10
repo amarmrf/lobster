@@ -14,18 +14,18 @@
     <!-- Create -->
     <div class="p-8 flex items-start bg-light-grey rounded-md shadow-lg">
       <!-- Form -->
-      <form @submit.prevent="createExercise" class="flex flex-col gap-y-5 w-full">
+      <form @submit.prevent="createEpoch" class="flex flex-col gap-y-5 w-full">
         <h1 class="text-2xl text-at-light-green"> New Epoch Creation </h1>
          <div class="flex flex-col">
           <label for="workout-name" class="mb-1 text-sm text-at-light-green"
-            >Epoch Name</label
+            >Epoch Title</label
           >
           <input
             type="text"
             required
             class="p-2 text-gray-500 focus:outline-none"
             id="workout-name"
-            v-model="epochName"
+            v-model="epochTitle"
           />
         </div>
 
@@ -54,7 +54,7 @@
             />
           </div>
           <button
-            @click="addEpoch"
+            @click="addExperience"
             type="button"
             class="mt-6 py-2 px-6 rounded-sm self-start text-sm
             text-white bg-at-light-green duration-200 border-solid
@@ -89,8 +89,7 @@ export default {
   name: "create-past",
   setup() {
     // Create data
-    const experienceName = ref("");
-    const experienceType = ref("select-experience");
+    const epochTitle = ref("");
     const experiences = ref([1]);
     const statusMsg = ref(null);
     const errorMsg = ref(null);
@@ -98,11 +97,12 @@ export default {
   
 
     // Add epoch
-    const addEpoch = () => {
+    const addExperience = () => {
       if (experiences.value.length < 7) {
         experiences.value.push({
           id: uid(),
           title: "",
+          description: "",
         });
       }
     };
@@ -122,11 +122,11 @@ export default {
     // Listens for chaging of experience type input
     const experienceChange = () => {
       experiences.value = [];
-      addEpoch();
+      addExperience();
     };
 
     // Create experience
-    const createExercise = async () => {
+    const createEpoch = async () => {
       try {
         const { error } = await supabase.from("past_experiences").insert([
           {
@@ -135,9 +135,8 @@ export default {
         ]);
         if (error) throw error;
         statusMsg.value = "Succes: Exercise Created!";
-        experienceName.value = null;
-        experienceType.value = "select-experience";
-        experiences.value = [];
+        epochTitle.value = null;
+        experiences.value = [{title: ''}];
         setTimeout(() => {
           statusMsg.value = false;
         }, 5000);
@@ -150,15 +149,14 @@ export default {
     };
 
     return {
-      experienceName,
-      experienceType,
+      epochTitle,
       experiences,
       statusMsg,
       errorMsg,
-      addEpoch,
+      addExperience,
       experienceChange,
       deleteEpoch,
-      createExercise,
+      createEpoch,
     };
   },
 };
