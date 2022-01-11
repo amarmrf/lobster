@@ -4,13 +4,13 @@
       <div class="flex item-center gap-x-4">
         <img src="../assets/images/dumbbell-light.png" class="w-14">
         <h1 class="text-lg mt-1">
-          Mythologize Your Life And Become The Main Character
+          Mythologize: Become The Main Character of Your Life
         </h1>
       </div>
       <ul class="flex flex-1 justify-end gap-x-10">
         <router-link v-if="user" class="cursor-pointer" :to="{name: 'Home'}"> Experiences </router-link> 
         <router-link v-if="user" class="cursor-pointer" :to="{name: 'Create'}"> Epochs </router-link> 
-        <router-link v-if="!user" class="cursor-pointer" :to="{name: 'Login'}"> Login</router-link>
+        <!-- <router-link v-if="!user" class="cursor-pointer" :to="{name: 'Login'}"> Login</router-link> -->
         <li v-if="user" @click="logout" class="cursor-pointer"> Logout</li>
       </ul>
     </nav> 

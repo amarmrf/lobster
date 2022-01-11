@@ -151,6 +151,8 @@ export default {
       }
     };
 
+    addExperience();
+    
     return {
       epochTitle,
       experiences,
