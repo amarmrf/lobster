@@ -14,7 +14,7 @@
     </div>
 
     <div v-if="dataLoaded">
-      <!-- General Workout Info -->
+      <!-- General Epoch Info -->
       <div
         class="flex flex-col items-center p-8 rounded-md shadow-md 
       bg-light-grey relative"
@@ -28,7 +28,7 @@
             <img class="h-3.5 w-auto" src="@/assets/images/pencil-light.png" alt="" />
           </div>
           <div
-            @click="deleteWorkout"
+            @click="deleteEpoch"
             class="h-7 w-7 rounded-full flex justify-center items-center cursor-pointer
         bg-at-light-green shadow-lg"
           >
@@ -37,7 +37,7 @@
         </div>
 
         <img
-          v-if="data.workoutType === 'cardio'"
+          v-if="data.title === 'cardio'"
           class="h-24 w-auto"
           src="@/assets/images/running-light-green.png"
           alt=""
@@ -54,7 +54,7 @@
           class="mt-6 py-1.5 px-5 text-xs text-white bg-at-light-green
         rounded-lg shadow-md"
         >
-          {{ data.workoutType }}
+          {{ data.title }}
         </span>
 
         <div class="w-full mt-6">
@@ -62,38 +62,38 @@
             v-if="edit"
             type="text"
             class="p-2 w-full text-gray-500 focus:outline-none"
-            v-model="data.workoutName"
+            v-model="data.epochTitle"
           />
           <h1 v-else class="text-at-light-green text-2xl text-center">
-            {{ data.workoutName }}
+            {{ data.epochTitle }}
           </h1>
         </div>
       </div>
 
-      <!-- Exercises -->
+      <!-- Experiences -->
       <div
         class="mt-10 p-8 rounded-md flex flex-col item-center
       bg-light-grey shadow-md"
       >
         <!-- Strength Training -->
-        <div v-if="data.workoutType === 'strength'" class="flex flex-col gap-y-4 w-full">
+        <div v-if="data.title === 'strength'" class="flex flex-col gap-y-4 w-full">
           <div
             class="flex flex-col gap-x-6 gap-y-2 relative sm:flex-row"
-            v-for="(item, index) in data.exercises"
+            v-for="(item, index) in data.experiences"
             :key="index"
           >
             <div class="flex flex-2 flex-col md:w-1/3">
-              <label for="exercise-name" class="mb-1 text-sm text-at-light-green">
-                Exercise
+              <label for="experience-name" class="mb-1 text-sm text-at-light-green">
+                Experience
               </label>
               <input
-                id="exercise-name"
+                id="experience-name"
                 v-if="edit"
                 class="p-2 w-full text-gray-500 focus:outline-none"
                 type="text"
-                v-model="item.exercise"
+                v-model="item.experience"
               />
-              <p v-else>{{ item.exercise }}</p>
+              <p v-else>{{ item.experience }}</p>
             </div>
             <div class="flex flex-1 flex-col">
               <label for="sets" class="mb-1 text-sm text-at-light-green">
@@ -136,7 +136,7 @@
             </div>
             <img
               v-if="edit"
-              @click="deleteExercise(item.id)"
+              @click="deleteExperience(item.id)"
               class="absolute h-4 w-auto -left-5 cursor-pointer"
               src="@/assets/images/trash-light-green.png"
               alt=""
@@ -144,13 +144,13 @@
           </div>
           <button
             v-if="edit"
-            @click="addExercise"
+            @click="addExperience"
             type="button"
             class="py-2 px-6 rounded-sm self-start text-sm text-white
             bg-at-light-green duration-200 border-solid border-2 border-transparent
             hover:border-at-light-green hover:bg-white hover:text-at-light-green"
           >
-            Add Exercise
+            Add Experience
           </button>
         </div>
 
@@ -158,7 +158,7 @@
         <div v-else class="flex flex-col gap-y-4 w-full">
           <div
             class="flex flex-col gap-x-6 gap-y-2 relative sm:flex-row"
-            v-for="(item, index) in data.exercises"
+            v-for="(item, index) in data.experiences"
             :key="index"
           >
             <div class="flex flex-2 flex-col md:w-1/3">
@@ -218,7 +218,7 @@
               <p v-else>{{ item.pace }}</p>
             </div>
             <img
-              @click="deleteExercise(item.id)"
+              @click="deleteExperience(item.id)"
               v-if="edit"
               class="absolute h-4 w-auto -left-5 cursor-pointer"
               src="@/assets/images/trash-light-green.png"
@@ -226,14 +226,14 @@
             />
           </div>
           <button
-            @click="addExercise"
+            @click="addExperience"
             v-if="edit"
             type="button"
             class="py-2 px-6 rounded-sm self-start text-sm text-white
             bg-at-light-green duration-200 border-solid border-2 border-transparent
             hover:border-at-light-green hover:bg-white hover:text-at-light-green"
           >
-            Add Exercise
+            Add Experience
           </button>
         </div>
       </div>
@@ -247,7 +247,7 @@
             bg-at-light-green duration-200 border-solid border-2 border-transparent
             hover:border-at-light-green hover:bg-white hover:text-at-light-green"
       >
-        Update Workout
+        Update Epoch
       </button>
     </div>
   </div>
@@ -261,7 +261,7 @@ import store from "../store/index";
 import { uid } from "uid";
 
 export default {
-  name: "view-workout",
+  name: "view-epoch",
   setup() {
     // Create data / vars
     const data = ref(null);
@@ -275,15 +275,15 @@ export default {
     // Get current Id of route
     const currentId = route.params.workoutId;
 
-    // Get workout data
+    // Get epoch data
     const getData = async () => {
       try {
-        const { data: workouts, error } = await supabase
-          .from("workouts")
+        const { data: epochs, error } = await supabase
+          .from("past_epochs")
           .select("*")
           .eq("id", currentId);
         if (error) throw error;
-        data.value = workouts[0];
+        data.value = epochs[0];
         dataLoaded.value = true;
         console.log(data.value);
       } catch (error) {
@@ -296,11 +296,11 @@ export default {
 
     getData();
 
-    // Delete workout
-    const deleteWorkout = async () => {
+    // Delete epoch
+    const deleteEpoch = async () => {
       try {
         const { error } = await supabase
-          .from("workouts")
+          .from("epochs")
           .delete()
           .eq("id", currentId);
         if (error) throw error;
@@ -320,54 +320,44 @@ export default {
       edit.value = !edit.value;
     };
 
-    // Add exercise
-    const addExercise = () => {
-      if (data.value.workoutType === "strength") {
-        data.value.exercises.push({
+    // Add experience
+    const addExperience = () => {
+      if (data.value.experiences.value.length < 6) {
+        data.value.experiences.value.push({
           id: uid(),
-          exercise: "",
-          sets: "",
-          reps: "",
-          weight: "",
+          title: "",
+          description: "",
         });
-        return;
       }
-      data.value.exercises.push({
-        id: uid(),
-        cardioType: "",
-        distance: "",
-        duration: "",
-        pace: "",
-      });
     };
 
-    // Delete exercise
-    const deleteExercise = (id) => {
-      if (data.value.exercises.length > 1) {
-        data.value.exercises = data.value.exercises.filter(
-          (exercise) => exercise.id !== id
+    // Delete experience
+    const deleteExperience = (id) => {
+      if (data.value.experiences.length > 1) {
+        data.value.experiences = data.value.experiences.filter(
+          (experience) => experience.id !== id
         );
         return;
       }
-      errorMsg.value = "Error: Cannot remove, need to at least have one exercise";
+      errorMsg.value = "Error: Cannot remove, need to at least have one experience";
       setTimeout(() => {
         errorMsg.value = false;
       }, 5000);
     };
 
-    // Update Workout
+    // Update Epoch
     const update = async () => {
       try {
         const { error } = await supabase
-          .from("workouts")
+          .from("epochs")
           .update({
-            workoutName: data.value.workoutName,
-            exercises: data.value.exercises,
+            epochTitle: data.value.epochTitle,
+            experiences: data.value.experiences,
           })
           .eq("id", currentId);
         if (error) throw error;
         edit.value = false;
-        statusMsg.value = "Success: Workout Updated!";
+        statusMsg.value = "Success: Epoch Updated!";
         setTimeout(() => {
           statusMsg.value = false;
         }, 5000);
@@ -387,9 +377,9 @@ export default {
       edit,
       editMode,
       user,
-      deleteWorkout,
-      addExercise,
-      deleteExercise,
+      deleteEpoch,
+      addExperience,
+      deleteExperience,
       update,
     };
   },

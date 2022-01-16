@@ -96,7 +96,7 @@ export default {
     const errorMsg = ref(null);
     const router = useRouter();
 
-    // Add epoch
+    // Add experience
     const addExperience = () => {
       if (experiences.value.length < 6) {
         experiences.value.push({
